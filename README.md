@@ -15,8 +15,8 @@ ___
 ### Static mode
 This mode of operation sets one static color on all your devices
 ### Screen mode
-
+This mode of operation sets the median color of your screen pixels
 ### Music mode
-
+This mode of operation changes color to the beat of the music
 ### Rainbow mode
-
+This mode of operation smoothly changes color to all colors of the rainbow
