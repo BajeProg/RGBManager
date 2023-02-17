@@ -172,7 +172,7 @@ namespace RGB_Manager
                 catch (Exception ex) { MessageBox.Show(ex.Message); }
             });
         }
-        public async override Task ChangeColorByTime()
+        public async override Task RainbowColorByTime()
         {
             await Task.Run(async () =>
             {

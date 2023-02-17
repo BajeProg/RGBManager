@@ -39,7 +39,7 @@ namespace RGB_Manager
                     CompeteMode = null;
                     break;
                 case Mode.Rainbow:
-                    CompeteMode = colorSetter.ChangeColorByTime;
+                    CompeteMode = colorSetter.RainbowColorByTime;
                     break;
                 case Mode.Static:
                     CompeteMode = null;

@@ -11,6 +11,6 @@ namespace RGB_Manager
         public abstract void SetColor(Color color);
         public abstract void SetColor(Color color, int timeInMilliseconds);
         public abstract Task SetScreenColorForLeds();
-        public abstract Task ChangeColorByTime();
+        public abstract Task RainbowColorByTime();
     }
 }
