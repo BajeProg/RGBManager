@@ -81,7 +81,8 @@ namespace RGB_Manager
 
         private void Mode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string modeName = ((TextBlock)e.AddedItems[0]).Text;
+            //string modeName = ((TextBlock)e.AddedItems[0]).Text;
+            string modeName = (string)((ComboBoxItem)e.AddedItems[0]).Content;
             Modes.Mode? mode = null;
             foreach(var item in Enum.GetValues(typeof(Modes.Mode)))
             {
