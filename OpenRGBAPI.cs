@@ -197,5 +197,19 @@ namespace RGB_Manager
                 SetColor(color);
             });
         }
+
+        public override void TurningOff()
+        {
+            if (client == null) return;
+            Color color = new Color(0, 0, 0);
+            Device[] devices = client.GetAllControllerData();
+            for (int i = 0; i < devices.Length; i++)
+            {
+                var leds = Enumerable.Range(0, devices[i].Colors.Length)
+                    .Select(_ => color)
+                    .ToArray();
+                client.UpdateLeds(i, leds);
+            }
+        }
     }
 }

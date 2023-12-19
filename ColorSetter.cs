@@ -9,6 +9,7 @@ namespace RGB_Manager
     abstract class ColorSetter
     {
         public abstract void SetColor(Color color);
+        public abstract void TurningOff();
         public abstract void SetColor(Color color, int timeInMilliseconds);
         public abstract Task SetScreenColorForLeds();
         public abstract Task RainbowColorByTime();

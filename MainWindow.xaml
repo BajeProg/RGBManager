@@ -46,8 +46,9 @@
         <Expander Grid.ColumnSpan="3" Header="Настройки" Grid.Row="0" Margin="10">
             <ListBox Background="#FFEDEDED">
                 <CheckBox Content="Закрывать OpenRGB при закрытии программы" Checked="CloseOpenRGBCheckBox_Checked" Unchecked="CloseOpenRGBCheckBox_Unchecked" x:Name="CloseOpenRGBCheckBox"/>
-                <CheckBox Content="Старт при запуске Windows" x:Name="StartWhenWindowsStartedCheckBox" Unchecked="StartWhenWindowsStartedCheckBox_Unchecked"/>
+                <CheckBox Content="Старт при запуске Windows" x:Name="StartWhenWindowsStartedCheckBox" Unchecked="StartWhenWindowsStartedCheckBox_Unchecked" Checked="StartWhenWindowsStartedCheckBox_Checked"/>
                 <CheckBox Content="Сворачивать в трей при закрытии" x:Name="TrayIconWhenClosedCheckBox" Checked="TrayIconWhenClosedCheckBox_Checked" Unchecked="TrayIconWhenClosedCheckBox_Unchecked" />
+                <CheckBox Content="Выключать подсветку при закрытии" x:Name="TurningOffWhenClosedCheckBox" Checked="TurningOffWhenClosedCheckBox_Checked" Unchecked="TurningOffWhenClosedCheckBox_Unchecked"/>
             </ListBox>
         </Expander>
     </Grid>

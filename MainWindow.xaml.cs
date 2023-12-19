@@ -50,11 +50,12 @@ namespace RGB_Manager
             {
                 if ((int?)key?.GetValue("Close OpenRGB") == 1) CloseOpenRGBCheckBox.IsChecked = true;
                 else CloseOpenRGBCheckBox.IsChecked = false;
-            }
-            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\RGB Manager"))
-            {
+
                 if ((int?)key?.GetValue("Tray") == 1) TrayIconWhenClosedCheckBox.IsChecked = true;
                 else TrayIconWhenClosedCheckBox.IsChecked = false;
+
+                if ((int?)key?.GetValue("Turning off") == 1) TurningOffWhenClosedCheckBox.IsChecked = true;
+                else TurningOffWhenClosedCheckBox.IsChecked = false;
             }
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"))
             {
@@ -63,8 +64,11 @@ namespace RGB_Manager
             }
         }
 
+        private void TurningOffEventHandler(object sender, EventArgs e) => colorSetter.TurningOff();
+
         private void onTrayCloseClicked(object sender, EventArgs e)
         {
+            if (TurningOffWhenClosedCheckBox.IsChecked.Value) colorSetter.TurningOff();
             Close();
         }
 
@@ -179,6 +183,18 @@ namespace RGB_Manager
         {
             if(RainbowModeSpeedText == null) return;
             RainbowModeSpeedText.Text = ((int)(RainbowModeSpeed.Maximum + 1 - e.NewValue)).ToString();
+        }
+
+        private void TurningOffWhenClosedCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\RGB Manager"))
+                key?.SetValue("Turning off", 1);
+        }
+
+        private void TurningOffWhenClosedCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\RGB Manager"))
+                key?.SetValue("Turning off", 0);
         }
     }
 }
