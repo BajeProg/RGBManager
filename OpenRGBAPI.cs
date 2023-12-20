@@ -4,6 +4,7 @@ using OpenRGB.NET.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -37,12 +38,13 @@ namespace RGB_Manager
                 {
                     if (key != null)
                     {
-                        process.StartInfo.Arguments = $"--startminimized --server --mode static --color {key?.GetValue("Last color")}";
+                        process.StartInfo.Arguments = $"--server --mode static --color {key?.GetValue("Last color")}";
                         lastColor = ColorOperations.HEXtoRGB((string)key?.GetValue("Last color"));
                     }
                     else
-                        process.StartInfo.Arguments = $"--startminimized --server --mode static";
+                        process.StartInfo.Arguments = $"--server --mode static";
                 }
+                process.StartInfo.CreateNoWindow = true;
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\RGB Manager"))
                 {
                     if (String.IsNullOrEmpty((string)key?.GetValue("OpenRGBPath")))
@@ -50,11 +52,8 @@ namespace RGB_Manager
                     else
                         process.StartInfo.FileName = (string)key?.GetValue("OpenRGBPath");
                 }
-                try
-                {
-                    process.Start();
-                }
-                catch
+                if(File.Exists(process.StartInfo.FileName)) process.Start();
+                else
                 {
 
                     if (MessageBox.Show("У вас установлен OpenRGB? Мы не смогли найти его на вашем устройстве.", "OpenRGB missing", MessageBoxButton.YesNo) == MessageBoxResult.No)
