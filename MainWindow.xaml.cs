@@ -19,6 +19,7 @@ namespace RGB_Manager
             InitializeTrayIcon();
             InitializeRegistryKeys();
             StartWhenWindowsStartedCheckBox.Checked += StartWhenWindowsStartedCheckBox_Checked;
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             colorSetter = new OpenRGBAPI();
 
             string[] args = Environment.GetCommandLineArgs();
@@ -64,11 +65,8 @@ namespace RGB_Manager
             }
         }
 
-        private void TurningOffEventHandler(object sender, EventArgs e) => colorSetter.TurningOff();
-
         private void onTrayCloseClicked(object sender, EventArgs e)
         {
-            if (TurningOffWhenClosedCheckBox.IsChecked.Value) colorSetter.TurningOff();
             Close();
         }
 
@@ -195,6 +193,16 @@ namespace RGB_Manager
         {
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\RGB Manager"))
                 key?.SetValue("Turning off", 0);
+        }
+
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            if(!TurningOffWhenClosedCheckBox.IsChecked.Value) return;
+            switch (e.Mode)
+            {
+                case PowerModes.Suspend: colorSetter.TurningOff(); break;
+                case PowerModes.Resume: colorSetter.TurningOn(); break;
+            }
         }
     }
 }

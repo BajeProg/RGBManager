@@ -210,5 +210,18 @@ namespace RGB_Manager
                 client.UpdateLeds(i, leds);
             }
         }
+
+        public override void TurningOn()
+        {
+            if (client == null || lastColor == null) return;
+            Device[] devices = client.GetAllControllerData();
+            for (int i = 0; i < devices.Length; i++)
+            {
+                var leds = Enumerable.Range(0, devices[i].Colors.Length)
+                    .Select(_ => lastColor)
+                    .ToArray();
+                client.UpdateLeds(i, leds);
+            }
+        }
     }
 }

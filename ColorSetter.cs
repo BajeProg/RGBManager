@@ -10,6 +10,7 @@ namespace RGB_Manager
     {
         public abstract void SetColor(Color color);
         public abstract void TurningOff();
+        public abstract void TurningOn();
         public abstract void SetColor(Color color, int timeInMilliseconds);
         public abstract Task SetScreenColorForLeds();
         public abstract Task RainbowColorByTime();
