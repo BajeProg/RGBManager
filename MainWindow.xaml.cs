@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Diagnostics;
+using System.Management;
 using System.Windows;
 using System.Windows.Controls;
 using Forms = System.Windows.Forms;
@@ -16,11 +17,10 @@ namespace RGB_Manager
         {
             InitializeComponent();
             _trayIcon = new Forms.NotifyIcon();
+            colorSetter = new OpenRGBAPI();
             InitializeTrayIcon();
             InitializeRegistryKeys();
-            StartWhenWindowsStartedCheckBox.Checked += StartWhenWindowsStartedCheckBox_Checked;
-            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
-            colorSetter = new OpenRGBAPI();
+            //InitializeShotdownWatcher();
 
             string[] args = Environment.GetCommandLineArgs();
             foreach (string arg in args)
@@ -30,6 +30,15 @@ namespace RGB_Manager
                     case "-silent": Hide(); _trayIcon.Visible = true; break;
                 }
             }
+        }
+
+        private void InitializeShotdownWatcher()
+        {
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+            WqlEventQuery query = new WqlEventQuery("SELECT * FROM Win32_ComputerShutdownEvent");
+            ManagementEventWatcher watcher = new ManagementEventWatcher(query);
+            watcher.EventArrived += Watcher_EventArrived;
+            watcher.Start();
         }
 
         private void InitializeTrayIcon()
@@ -43,6 +52,9 @@ namespace RGB_Manager
             Forms.ToolStripButton toolStripCloseButton = new Forms.ToolStripButton("Close");
             toolStripCloseButton.Click += onTrayCloseClicked;
             _trayIcon.ContextMenuStrip.Items.Add(toolStripCloseButton);
+            Forms.ToolStripButton toolStripOffButton = new Forms.ToolStripButton("Off");
+            toolStripOffButton.Click += (a, e) => { colorSetter.TurningOff(); };
+            _trayIcon.ContextMenuStrip.Items.Add(toolStripOffButton);
         }
 
         private void InitializeRegistryKeys()
@@ -62,6 +74,7 @@ namespace RGB_Manager
             {
                 foreach(string keyName in key.GetValueNames())
                     if (keyName == "RGBManager") StartWhenWindowsStartedCheckBox.IsChecked = true;
+                    else StartWhenWindowsStartedCheckBox.IsChecked = false;
             }
         }
 
@@ -147,7 +160,7 @@ namespace RGB_Manager
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"))
             {
                 if (Environment.CurrentDirectory == Environment.SystemDirectory) return;
-                key?.SetValue("RGBManager", Environment.CurrentDirectory + @"\RGB Manager.exe");
+                key?.SetValue("RGBManager", Environment.CurrentDirectory + @"\RGB Manager.exe -silent");
             }
         }
 
@@ -203,6 +216,11 @@ namespace RGB_Manager
                 case PowerModes.Suspend: colorSetter.TurningOff(); break;
                 case PowerModes.Resume: colorSetter.TurningOn(); break;
             }
+        }
+
+        private void Watcher_EventArrived(object sender, EventArrivedEventArgs e)
+        {
+            colorSetter.TurningOff();
         }
     }
 }
