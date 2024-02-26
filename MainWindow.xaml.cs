@@ -76,6 +76,18 @@ namespace RGB_Manager
                     if (keyName == "RGBManager") StartWhenWindowsStartedCheckBox.IsChecked = true;
                     else StartWhenWindowsStartedCheckBox.IsChecked = false;
             }
+
+            StartWhenWindowsStartedCheckBox.Checked += StartWhenWindowsStartedCheckBox_Checked;
+            StartWhenWindowsStartedCheckBox.Unchecked += StartWhenWindowsStartedCheckBox_Unchecked;
+
+            CloseOpenRGBCheckBox.Checked += CloseOpenRGBCheckBox_Checked;
+            CloseOpenRGBCheckBox.Unchecked += CloseOpenRGBCheckBox_Unchecked;
+
+            TrayIconWhenClosedCheckBox.Checked += TrayIconWhenClosedCheckBox_Checked;
+            TrayIconWhenClosedCheckBox.Unchecked += TrayIconWhenClosedCheckBox_Unchecked;
+
+            TurningOffWhenClosedCheckBox.Checked += TurningOffWhenClosedCheckBox_Checked;
+            TurningOffWhenClosedCheckBox.Unchecked += TurningOffWhenClosedCheckBox_Unchecked;
         }
 
         private void onTrayCloseClicked(object sender, EventArgs e)
@@ -159,8 +171,9 @@ namespace RGB_Manager
         {
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"))
             {
-                if (Environment.CurrentDirectory == Environment.SystemDirectory) return;
-                key?.SetValue("RGBManager", Environment.CurrentDirectory + @"\RGB Manager.exe -silent");
+                foreach (string keyName in key.GetValueNames())
+                    if (keyName == "RGBManager") return;
+                    else key?.SetValue("RGBManager", Environment.CurrentDirectory + @"\RGB Manager.exe -silent");
             }
         }
 
